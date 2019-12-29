@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namepseac指定对那个接口进行映射-->
+<mapper namespace="com.gdpi.mapper.UserMapper">
+    <!--
+        接口： List<User> findAll();
+        映射：
+            id 对应接口的方法名称
+            resultType  对应方法返回值类型；如果方法返回的是集合，这里指定集合中元素的类型即可。
+    -->
+    <select id="findAll" resultType="com.gdpi.bean.User">
+        select * from user
+    </select>
+
+    <select id="findById" resultType="com.gdpi.bean.User">
+        select * from user where id=#{id}
+    </select>
+
+    <!--
+        #{id} 中的占位符参数可以随意写，因为方法参数只有一个且是简单类型。
+    -->
+    <delete id="delete">
+        delete from user where id=#{id}
+    </delete>
+
+
+    <insert id="insert">
+        insert into user(name,age,sex) values (#{name},#{age},#{sex})
+    </insert>
+
+    <update id="update">
+        update user set name=#{name},sex=#{sex},age=#{age} where id=#{id}
+    </update>
+
+    <select id="findByUserName" resultType="com.gdpi.bean.User">
+        select * from user where name = #{username}
+    </select>
+
+    <delete id="deleteUserRoleByUserId">
+    DELETE FROM user_role WHERE userId=#{userId}
+</delete>
+
+    <!--
+        Mybatis接口方法中：
+        1. 接口方法是对象，占位符就是对象属性。
+           接口： void save(User user);
+           映射： insert into..values(${name})    ${name} 中的name就是User对象的属性
+        2. 接口方法是普通类型，且只有一个参数，占位符参数值可以随便写
+           接口： void find(String name)
+           映射   select * from user where username = #{asaaa}   OK
+                 select * from user where username = #{name}    OK
+        3. 接口方法参数有多个
+           实现1：
+                接口：void saveUserRole(String userId, String roleId);
+                映射1：
+                    INSERT INTO user_role(userId,roleId)VALUES(#{arg0},#{arg1})
+                    arg0 对应方法的第一个参数
+           实现2：
+                 接口：void saveUserRole(String userId, String roleId);
+                映射：
+                    INSERT INTO user_role(userId,roleId)VALUES(#{param1},#{param2})
+
+
+           实现3： 把接口的多个参数封装为Map，然后占位符中指定map的key，如：#{map的key}
+           实现4：
+                接口： void saveUserRole(@Param("userId") String userId, @Param("roleId")String roleId);
+                映射：
+                     INSERT INTO user_role(userId,roleId)VALUES(#{userId},#{roleId})
+
+                注意： @Param("userId") 注解中的参数与占位符参数值对应。
+
+           实现5：把多个参数封装为javabean对象
+    -->
+    <insert id="saveUserRole">
+    INSERT INTO user_role(userId,roleId)VALUES(#{userId},#{roleId})
+</insert>
+
+
+
+</mapper>

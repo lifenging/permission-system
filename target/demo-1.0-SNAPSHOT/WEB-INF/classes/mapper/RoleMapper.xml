@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namepseac指定对那个接口进行映射-->
+<mapper namespace="com.gdpi.mapper.RoleMapper">
+    <select id="findAll" resultType="com.gdpi.bean.Role">
+        select * from role
+    </select>
+
+    <delete id="delete">
+        delete from role where roleId=#{roleId}
+    </delete>
+
+    <select id="findById" resultType="com.gdpi.bean.Role">
+        SELECT * FROM role where roleId=#{roleId}
+    </select>
+
+    <update id="update">
+        update role
+        set roleName=#{roleName} where roleId=#{roleId}
+    </update>
+
+    <insert id="save">
+        insert into role(roleName) values (#{roleName})
+    </insert>
+
+    <select id="findUserRoleByUserId" resultType="com.gdpi.bean.Role">
+         SELECT r.* FROM user_role ur INNER JOIN role r ON ur.roleId=r.roleId WHERE ur.userId=#{userId}
+    </select>
+
+    <delete id="deleteRolePermissionByRoleId">
+        delete from role_permission where roleId=#{roleId}
+    </delete>
+
+    <insert id="saveRolePermission">
+        insert into role_permission(roleId,permissionId) values (#{arg0},#{arg1})
+    </insert>
+</mapper>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namepseac指定对那个接口进行映射-->
+<mapper namespace="com.gdpi.mapper.PermissionMapper">
+
+    <select id="findAll" resultType="com.gdpi.bean.Permission">
+        SELECT * FROM permission
+    </select>
+
+    <delete id="delete">
+        delete from permission where permissionId=#{permissionId}
+    </delete>
+
+    <select id="findById" resultType="com.gdpi.bean.Permission">
+       SELECT * FROM permission where permissionId=#{permissionId}
+    </select>
+
+    <update id="update">
+         update permission
+         set
+            permissionName=#{permissionName},
+            parentId=#{parentId},
+            parentName=#{parentName},
+            url=#{url},
+            level=#{level}
+         where permissionId=#{permissionId}
+    </update>
+
+    <insert id="save">
+        insert into permission(permissionName,parentId,parentName,url,level)
+        values(#{permissionName},#{parentId},#{parentName},#{url},#{level})
+    </insert>
+
+    <select id="findRolePermissionByRoleId" resultType="com.gdpi.bean.Permission">
+        select p.* from role_permission rp inner join permission p on rp.permissionId=p.permissionId where rp.roleId=#{permissionId}
+    </select>
+
+    <select id="findUserPermissionByUserId" resultType="com.gdpi.bean.Permission">
+        select
+        DISTINCT m.*
+        from permission m
+        inner join role_permission rp on m.permissionId=rp.permissionId
+        inner join user_role ru on ru.roleId=rp.roleId
+        where 1=1
+        and ru.userId=#{userId}
+    </select>
+
+</mapper>
